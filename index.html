@@ -7,13 +7,12 @@
         body { margin: 0; overflow: hidden; background-color: #111; }
         canvas { display: block; }
     </style>
+    <!-- Completely new, reliable CDN paths -->
+    <script src="https://unpkg.com"></script>
+    <script src="https://unpkg.com"></script>
+    <script src="https://unpkg.com"></script>
 </head>
 <body>
-    <!-- Updated, Reliable Three.js CDN Links -->
-    <script src="https://unpkg.com"></script>
-    <script src="https://unpkg.com"></script>
-    <script src="https://unpkg.com"></script>
-
 
     <script>
         // 1. Scene Setup
@@ -39,16 +38,23 @@
         dirLight.position.set(5, 10, 7);
         scene.add(dirLight);
 
-                // 6. Load F1 Model
+        // 6. Load F1 Model
         const loader = new THREE.GLTFLoader();
         loader.load('models/scene.gltf', function (gltf) {
             const car = gltf.scene;
+            
+            // This centers the model perfectly in front of your camera view
+            const box = new THREE.Box3().setFromObject(car);
+            const center = box.getCenter(new THREE.Vector3());
+            car.position.sub(center); 
+            
+            // Set scale to 1, 1, 1
             car.scale.set(1, 1, 1); 
             scene.add(car);
+            console.log("Model loaded successfully!");
         }, undefined, function (error) {
-            console.error(error);
+            console.error("Error loading model:", error);
         });
-
 
         // 7. Animation Loop
         function animate() {
