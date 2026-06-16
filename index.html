@@ -7,14 +7,15 @@
         body { margin: 0; overflow: hidden; background-color: #111; }
         canvas { display: block; }
     </style>
-    <!-- Completely new, reliable CDN paths -->
-    <script src="https://unpkg.com"></script>
-    <script src="https://unpkg.com"></script>
-    <script src="https://unpkg.com"></script>
 </head>
 <body>
 
-    <script>
+    <!-- Using ES Modules completely bypasses the 'THREE is not defined' error -->
+    <script type="module">
+        import * as THREE from 'https://unpkg.com';
+        import { OrbitControls } from 'https://unpkg.com';
+        import { GLTFLoader } from 'https://unpkg.com';
+
         // 1. Scene Setup
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x1a1a1a);
@@ -29,17 +30,17 @@
         document.body.appendChild(renderer.domElement);
 
         // 4. Controls
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        const controls = new OrbitControls(camera, renderer.domElement);
 
         // 5. Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
         scene.add(ambientLight);
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
         dirLight.position.set(5, 10, 7);
         scene.add(dirLight);
 
         // 6. Load F1 Model
-        const loader = new THREE.GLTFLoader();
+        const loader = new GLTFLoader();
         loader.load('models/scene.gltf', function (gltf) {
             const car = gltf.scene;
             
@@ -48,7 +49,7 @@
             const center = box.getCenter(new THREE.Vector3());
             car.position.sub(center); 
             
-            // Set scale to 1, 1, 1
+            // Set scale
             car.scale.set(1, 1, 1); 
             scene.add(car);
             console.log("Model loaded successfully!");
